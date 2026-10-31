@@ -1,0 +1,60 @@
+/* Splitsmith: uses Obsidian CSS variables only, so it follows every theme. */
+
+.splitsmith-muted {
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.splitsmith-preview .modal-content {
+	max-height: 70vh;
+	overflow-y: auto;
+}
+
+.splitsmith-part-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-3);
+	margin: var(--size-4-3) 0;
+}
+
+.splitsmith-part {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	padding: var(--size-4-2) var(--size-4-3);
+	background: var(--background-secondary);
+	transition: opacity 120ms ease;
+}
+
+.splitsmith-part.is-dropped {
+	opacity: 0.45;
+}
+
+.splitsmith-part-head {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-2);
+}
+
+.splitsmith-title {
+	flex: 1;
+	font-weight: var(--font-semibold);
+}
+
+.splitsmith-snippet {
+	margin: var(--size-4-2) 0 0;
+	white-space: pre-wrap;
+	word-break: break-word;
+	font-size: var(--font-ui-small);
+	color: var(--text-muted);
+	max-height: 6em;
+	overflow: hidden;
+}
+
+.splitsmith-status.is-error {
+	color: var(--text-error);
+}
+
+
+.splitsmith-key-input {
+	width: 100%;
+}

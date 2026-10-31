@@ -1,0 +1,10 @@
+{
+	"id": "splitsmith",
+	"name": "Splitsmith",
+	"version": "0.1.0",
+	"minAppVersion": "1.11.4",
+	"description": "Split long notes into linked atomic notes by heading or delimiter, or with AI (your own key or local Ollama), checked to rebuild your original note exactly.",
+	"author": "Mira Forge",
+	"authorUrl": "https://github.com/mira-forge",
+	"isDesktopOnly": false
+}
