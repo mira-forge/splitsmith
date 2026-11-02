@@ -227,7 +227,7 @@ export class SplitsmithSettingTab extends PluginSettingTab {
 			},
 			text("Delimiter", "A line that marks where to split, for the split by delimiter command.", ["separator", "divider"], () => s.delimiter, (v) => (s.delimiter = v.trim() || "---")),
 			{
-				name: "Show Cardsmith link after a split",
+				name: "Show a suggestion for Cardsmith after a split",
 				desc: "Adds one line to the split's notice linking to Cardsmith, a Mira Forge plugin that turns notes into flashcards. Nothing is sent anywhere unless you select it.",
 				aliases: ["Cardsmith", "flashcards", "link", "suggestion"],
 				build: (st) =>
