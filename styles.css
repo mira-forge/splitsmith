@@ -58,3 +58,9 @@
 .splitsmith-key-input {
 	width: 100%;
 }
+
+/* One-line Cardsmith link inside the split notice (optional, off in settings). */
+.splitsmith-cardsmith-link {
+	margin-top: var(--size-4-2);
+	font-size: var(--font-ui-smaller);
+}

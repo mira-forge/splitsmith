@@ -13,6 +13,7 @@ import { applySplit, undoSplit, unverifiedLine, type LinkStyle, type SplitOption
 import { planWithAi } from "./core/ai-split";
 import { PreviewModal } from "./ui/preview-modal";
 import { LevelModal } from "./ui/level-modal";
+import { cardsmithLinkText, noticeWithCardsmithLink, openCardsmith } from "./ui/cardsmith-link";
 
 /** Obsidian's requestUrl does not apply browser CORS rules, which local Ollama and most APIs need. */
 const obsidianHttp: HttpFn = async (req) => {
@@ -101,6 +102,7 @@ export default class SplitsmithPlugin extends Plugin {
 		const raw = Array.isArray(loaded.presets) && loaded.presets.length ? loaded.presets : DEFAULT_PRESETS;
 		this.settings.presets = raw.map((p, i) => cleanPreset(p, `preset-${i + 1}`));
 		this.settings.inboxDone = { ...(loaded.inboxDone ?? {}) };
+		if (typeof this.settings.showCardsmithLink !== "boolean") this.settings.showCardsmithLink = true;
 		if (!this.settings.presets.some((p) => p.id === this.settings.inboxPresetId)) this.settings.inboxPresetId = this.settings.presets[0]!.id;
 	}
 
@@ -265,7 +267,24 @@ export default class SplitsmithPlugin extends Plugin {
 			const own = r.linksRewritten ? ` Updated ${r.linksRewritten} link${r.linksRewritten === 1 ? "" : "s"} in this note and the new notes.` : "";
 			const skipped = r.linksSkipped ? ` ${r.linksSkipped} link${r.linksSkipped === 1 ? "" : "s"} could not be updated.` : "";
 			const unverified = unverifiedLine(r.unverified);
-			new Notice(`Created ${n}.${links}${own}${skipped}${unverified ? ` ${unverified}` : ""}${undo}`, unverified ? 0 : 8000);
+			const message = `Created ${n}.${links}${own}${skipped}${unverified ? ` ${unverified}` : ""}${undo}`;
+			const first = r.created[0] ? this.app.vault.getFileByPath(r.created[0]) : null;
+			const notice: Notice = new Notice(
+				noticeWithCardsmithLink(
+					message,
+					cardsmithLinkText(this.app, this.settings.showCardsmithLink),
+					() => {
+						notice.hide();
+						void openCardsmith(this.app, first);
+					},
+					() => {
+						notice.hide();
+						this.settings.showCardsmithLink = false;
+						void this.saveSettings();
+					},
+				),
+				unverified ? 0 : 8000,
+			);
 		} finally {
 			this.busy = false;
 		}

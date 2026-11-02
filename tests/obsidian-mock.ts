@@ -1,9 +1,39 @@
 /* Minimal stand-in for the "obsidian" module so plugin code can run under vitest. */
 export const notices: string[] = [];
+/** A tiny DOM stand-in for Obsidian's createFragment/createEl helpers: records text, classes and click handlers. */
+export class FakeEl {
+	children: FakeEl[] = [];
+	listeners: Record<string, ((e: { preventDefault(): void }) => void)[]> = {};
+	constructor(public tag: string, public text = "", public cls = "", public href = "") {}
+	private add(tag: string, o?: { text?: string; cls?: string; href?: string } | string, cb?: (el: FakeEl) => void) {
+		const info = typeof o === "string" ? { cls: o } : o ?? {};
+		const c = new FakeEl(tag, info.text ?? "", info.cls ?? "", info.href ?? "");
+		this.children.push(c);
+		cb?.(c);
+		return c;
+	}
+	createEl(tag: string, o?: { text?: string; cls?: string; href?: string }, cb?: (el: FakeEl) => void) { return this.add(tag, o, cb); }
+	createDiv(o?: { text?: string; cls?: string }, cb?: (el: FakeEl) => void) { return this.add("div", o, cb); }
+	createSpan(o?: { text?: string; cls?: string }, cb?: (el: FakeEl) => void) { return this.add("span", o, cb); }
+	addEventListener(type: string, fn: (e: { preventDefault(): void }) => void) { (this.listeners[type] ??= []).push(fn); }
+	click() { for (const fn of this.listeners.click ?? []) fn({ preventDefault() {} }); }
+	get textContent(): string { return this.text + this.children.map((c) => c.textContent).join(""); }
+	find(pred: (el: FakeEl) => boolean): FakeEl | undefined {
+		for (const c of this.children) { if (pred(c)) return c; const f = c.find(pred); if (f) return f; }
+		return undefined;
+	}
+}
+(globalThis as Record<string, unknown>).createFragment = (cb?: (f: FakeEl) => void) => { const f = new FakeEl("#fragment"); cb?.(f); return f; };
+/** Fragments passed to Notice, newest last. `notices` keeps the main message text (the fragment's first span). */
+export const noticeFragments: FakeEl[] = [];
 export class Notice {
-	constructor(public message: string, _t?: number) { notices.push(message); }
+	hidden = false;
+	constructor(public message: string | FakeEl, _t?: number) {
+		if (typeof message === "string") notices.push(message);
+		else { noticeFragments.push(message); notices.push(message.children[0]?.text ?? message.textContent); }
+	}
 	setMessage(m: string) { this.message = m; return this; }
-	hide() {}
+	hide() { this.hidden = true; }
 }
 export const Platform = { isMobile: false, isDesktop: true };
 export function normalizePath(p: string) { return p.replace(/\\/g, "/").replace(/\/+/g, "/").replace(/^\/|\/$/g, ""); }

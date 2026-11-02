@@ -4,11 +4,13 @@ Split long notes into linked, atomic notes: by heading, by a delimiter such as `
 
 > Splitsmith is free. Every feature is included: no account, no license key, no paid tier.
 
+*Made by Mira Forge, an AI-run studio: Splitsmith's code is written and tested by AI agents ([details](#disclosures)).*
+
 ## Disclosures
 
 - **Free.** Every feature described here is free. There is no paid tier, no license key and no account.
 - **Network use.** Splitsmith only connects to **the AI provider you choose** (Ollama on your own machine by default, or OpenAI, Anthropic, OpenRouter or any OpenAI-compatible endpoint). This happens only when you run **AI split**. It sends the note's lines, numbered, plus instructions. The model sends back a plan only: where each part starts and ends, and a title. It never sends back note text, and any text it does return is ignored. Requests go straight from your device to that provider under your own account. Mira Forge never receives your notes or your API key.
-  Nothing else: no analytics, no telemetry, no crash reporting, no update checks, no ads.
+  Nothing else: no analytics, no telemetry, no crash reporting, no update checks, no ads. The optional Cardsmith line after a split (see [Pair it with Cardsmith](#pair-it-with-cardsmith)) is plain text until you select it; selecting it either runs Cardsmith, if you have it, or opens its listing page in your browser.
 - **Your API key stays on your device.** It is kept in Obsidian's secret storage (Settings → Keychain), not in your vault files or the plugin's `data.json`. It is only ever sent to the AI provider you chose, and never reaches Mira Forge.
 - **Files.** Splitsmith only writes inside your vault, through Obsidian's API: the new notes, and links in the note you split. If link repair is on, it also updates links that would otherwise break: links in other notes that pointed at a heading or block that moved, links in the original note to its own moved headings and blocks, and links inside the moved text. It does not move attachments (images, PDFs and other files). Undo moves the new notes to Obsidian's trash. To make undo possible, the plugin's `data.json` keeps a copy of the text of the note(s) from your last split or last inbox batch, until the next one replaces it. Inbox mode also keeps, in `data.json`, the path of each note it has processed and a short fingerprint of its text (a hash and its length, not the text), so it can tell when a note has changed. `data.json` stays on your device, in your vault's config folder (usually `.obsidian`).
 - **Made by AI agents.** Mira Forge is an AI-run studio: code is written and tested by AI agents. Splitsmith's code is not reviewed line by line by a human developer. Every change runs an automated test suite (including property tests on thousands of random notes and inbox batches) and is tested in a real copy of Obsidian. The source is readable and unminified; see `src/`.
@@ -65,6 +67,14 @@ The plan is checked before you see it. Splitsmith rejects plans that skip lines,
 ### On mobile
 
 Splitsmith is not marked desktop-only, so Obsidian lets you install it on iOS and Android, but it has not been tested on a real phone or tablet yet; all testing so far is on desktop Obsidian on Linux only; Windows and macOS untested. The non-AI splits, the preview, the lossless check, undo and link repair use the same code as on desktop. AI split is meant to work on mobile with a cloud provider and your own API key (OpenAI, Anthropic, OpenRouter or another OpenAI-compatible endpoint). Ollama does not run on phones or tablets, so with the Ollama setting AI split on mobile shows a message explaining this and changes nothing.
+
+## Pair it with Cardsmith
+
+Split notes, then make cards. [Cardsmith](https://community.obsidian.md/plugins/cardsmith), also by Mira Forge, turns a note into flashcards you review in Obsidian or export to Anki. Atomic notes from Splitsmith make focused card sets.
+
+- Cardsmith is a separate plugin. Its free tier makes cards from single notes with your own AI key or a local Ollama model; an optional paid Pro ($3/mo) adds full folder runs, synced folders and bigger decks. Splitsmith itself stays free and works the same with or without it.
+- After a successful split, Splitsmith's notice adds one line: **Turn these notes into flashcards with Cardsmith** (or **Make flashcards with Cardsmith** if it's installed and enabled, which opens the first new note and runs Cardsmith on it). It never appears at startup, on failed splits or as a pop-up.
+- To hide it, select **Don't show again** in the notice, or turn off **Settings → Splitsmith → Show Cardsmith link after a split**.
 
 ## Known limitations
 
