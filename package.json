@@ -1,6 +1,6 @@
 {
 	"name": "splitsmith",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"private": true,
 	"description": "Split long notes into linked atomic notes by heading or delimiter, or with AI (your own key or local Ollama), checked to rebuild your original note exactly.",
 	"main": "main.js",
